@@ -20,6 +20,7 @@ define( 'AWC_VERSION', wp_get_theme()->get( 'Version' ) );
 function include_inc_files() {
 	$files = array(
 	
+		'./inc/acf/', // ACF/SCF Functions.
 		'./inc/custom-functions/', // Custom functions that act independently of the theme templates.
 		'./inc/google-recaptcha/', // Google recaptcha setup.
 		'./inc/head-and-footer-codes/', // Adds codes/tags to the theme head.

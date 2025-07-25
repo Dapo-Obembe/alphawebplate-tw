@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "utilities.css";
+@import "./utilities.css";
 @import "./header.css";
 @import "./blocks/index.css";
 @import "./components/index.css";

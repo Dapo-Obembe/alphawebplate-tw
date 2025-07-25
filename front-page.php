@@ -3,7 +3,8 @@
  * The Front-Page template file.
  *
  * This template is for the home page. Arrange the template files
- * to how you want it to show.
+ * to how you want it to show. or replace the content with what is in
+ * page.php if you will be using blocks.
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *

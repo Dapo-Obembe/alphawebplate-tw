@@ -9,7 +9,7 @@
     @apply flex items-center gap-8;
 
     li {
-      @apply text-[1rem] uppercase hover:text-primary-light transition-all;
+      @apply text-[1rem] uppercase hover:text-primary transition-all;
     }
     li.current-menu-item {
       @apply font-bold text-primary underline underline-offset-4;
@@ -91,7 +91,7 @@
     gap: 2rem;
 
     li {
-      @apply text-[1rem] uppercase hover:text-primary-light transition-all;
+      @apply text-[1rem] uppercase hover:text-primary transition-all;
     }
     li.current-menu-item {
       @apply font-bold text-primary underline underline-offset-4;
