@@ -1,23 +1,20 @@
-# AlphaWeb WordPress Tailwind Starter Theme
+# AlphaWeb WordPress Tailwind Boilerplate
 
-A modern WordPress + TailwindCSS boilerplate for building fast WordPress themes made and managed by [Dapo Obembe](https://www.dapoobembe.com) - founder of [Alpha Web Consult](https://alphawebconsult.com). This lightweight, performance-focused WordPress Tailwind boilerplate provides a solid foundation for custom WordPress theme development with TailwindCss and Advanced Custom Fields (ACF) integration.
+A modern WordPress + TailwindCSS boilerplate for building fast WordPress themes made and managed by [Dapo Obembe](https://www.dapoobembe.com). This lightweight, performance-focused WordPress Tailwind boilerplate provides a solid foundation for custom WordPress theme development with TailwindCss, Vite and Advanced Custom Fields (ACF) integration.
 
 There is no overly-complicated set up in the backend.
 
-## Who is AlphaWeb WordPress Tailwind starter theme for?
+## Who is AlphaWeb WordPress Tailwind boilerplate for?
 
-This WordPress TailwindCSS starter theme is for developers who would love to use WordPress and feel like it is a headless CMS. The data are set up using ACF and all the page structures are done in your code. The Block Editor styles are even dequeued in order to get a better performing WordPress website. Be in control of your WordPress website.
+This WordPress TailwindCSS boilerplate is for developers who would love to use Vite, TailwindCss to build amazing Themes. The data are set up using ACF/SCF. You can either use classic approach or build blocks inside your theme.
 
 If I can do something with WordPress, is to ensure it is fast. This approach helps me get at least 80/100 in performance and 100 in other Lighthouse metrics.
-
-## Demo site
-
-Check https://alphawebconsult.com
 
 ## Features
 
 - 🎨 TailwindCSS integration for utility-first styling
 - 🧩 Advanced Custom Fields (ACF) or Secure Custom Fields (SCF) support and integration
+- VITE for better development which include HMR
 - 📱 Responsive design out of the box
 - 🔍 SEO-friendly structure
 - 🔒 Security best practices
@@ -46,7 +43,7 @@ Check https://alphawebconsult.com
    cd your-theme-name
    ```
 
-2. IMPORTANT: Change every instances of https://swiftplate.loocal to your wordpress local URL.
+2. IMPORTANT: Change every instances of https://example.local to your wordpress local URL and change the port: 9000 to any number you wish.
 
 3. Install dependencies:
 
@@ -74,6 +71,42 @@ Check https://alphawebconsult.com
 
 6. Activate the theme in the WordPress admin panel.
 
+## WPCS and PHPCS Setup
+
+If you want your code (for theme) to follow the WPCS (WordPress Coding standards):
+
+1. Run `composer install`
+2. Ensure you install and activate these extensions (php snifer by wongjn and phpcs by shevaua) installed
+3. Then you can lint and fix via: `composer lint` and `composer fix`
+
+4. create .vscode/settings.json in the root of your theme and paste the code below:
+5. ```json
+   {
+     "phpcbf.enable": true,
+     "phpcbf.documentFormattingProvider": true,
+     "phpcbf.standard": "WordPress",
+     "phpcbf.onsave": true,
+     "phpcbf.executablePath": "vendor\\bin\\phpcbf.bat",
+
+     "phpSniffer.autoDetect": true,
+     "phpSniffer.executablesFolder": "vendor\\bin",
+     "phpSniffer.standard": "WordPress",
+
+     "[php]": {
+       "editor.formatOnSave": true,
+       "editor.defaultFormatter": "wongjn.php-sniffer"
+     }
+   }
+   ```
+
+````
+5. Ensure you install these plugins: PHPCS by Shevaua and PHP Sniffer by wongjn
+6. Edit your VSCODE Settings.json and paste this somewhere:
+        "[php]": {
+            "editor.defaultFormatter": "wongjn.php-sniffer"
+        },
+7. Restart your VSCODE and your WPC and PHPCS should be working.
+
 ## Development Workflow
 
 ### Development Mode
@@ -82,14 +115,12 @@ Start the development environment with:
 
 ```bash
 npm run dev
-```
+````
 
-This will:
+Because we are using Vite for bundling the files, the local environment is set up to pick the assets using @vite-client. When you run npm run build, the dist/ will be created (which has been set up to work in production).
 
-- Compile TailwindCSS with all classes available for development
-- Watch for changes in your PHP, JS, and CSS files
-- Watch for your svg icons at src/icons/ and bundle to dist/icons/sprite.svg
-- You can then access your work on http://localhost:9000
+- You can then access your work on http://localhost:9000 or whatever port you choose to use.
+- Your changes will be saved immediately and you see them on the frontend wihtout refreshing your browser. Thanks to Vite's HMR.
 
 ### Production Build
 
@@ -104,14 +135,6 @@ This will:
 - Minify and optimize all assets
 - Purge unused TailwindCSS classes
 - Generate production CSS and JS files in the dist/
-
-### WPCS & PHPCS Setup
-
-If you want your code (for theme) to follow the WPCS (WordPress Coding standards):
-
-1. Run `composer install`
-2. Ensure you install and activate these extensions (php snifer by wongjn and phpcs by shevaua) installed
-3. Then you can lint and fix via: `composer lint` and `composer fix`
 
 ## Theme Structure
 
@@ -134,7 +157,7 @@ your-theme-name/
 │   ├── filters/            # All filtering actions
 │   ├── setup/              # Theme setup files
 │   └── template-tags/      # Template tags
-├── src/                    # Source files
+├── assets/                    # Source files
 │   ├── css/                # CSS source files
 │   ├── js/                 # JavaScript source files
 │   └── icons/              # SVG icons
@@ -159,7 +182,7 @@ your-theme-name/
 ├── style.css               # Theme metadata
 ├── composer.json           # Composer set up for WPCS
 ├── tailwind.config.js      # TailwindCSS configuration
-├── webpack.config.js       # Webpack configuration
+├── vite.config.js          # Vite configuration
 ├── package.json            # NPM dependencies and scripts
 └── README.md               # This file
 ```
@@ -169,8 +192,6 @@ your-theme-name/
 If you will be using acf blocks in your block editor,
 it means you will need to structure that particular page or pages
 to accommodate blocks. E.g, see the style of the index.php below that support using blocks.
-
-NOTE: Haven't properly tested the usage of Tailwind classes in the block editor area.
 
 ```php
 <?php
@@ -216,8 +237,8 @@ Customize TailwindCSS in the `tailwind.config.js` file:
 module.exports = {
   content: [
     "./**/*.php", // Scan all PHP files
-    "./src/js/**/*.js", // Scan all JavaScript files
-    "./src/css/pages/**/*.css",
+    "./assets/js/**/*.js", // Scan all JavaScript files
+    "./assets/css/pages/**/*.css",
   ],
   theme: {
     extend: {},
@@ -231,67 +252,19 @@ module.exports = {
 This boilerplate is built with ACF support in mind and includes:
 
 - ACF JSON for version control of field groups
-- Helper functions for ACF fields in the `inc/custom-functions/` directory
+- Helper functions for ACF fields in the `inc/acf/` directory
 - Template parts that integrate with ACF flexible content fields
 - Examples of ACF field usage in various components
 
 #### ACF Field Setup
 
 ACF Fields you create in the backend are auto-saved in the acf-json/.
-Check the inc/custom-functions for the acf setup function.
+Check the inc/acf/ for the acf setup function.
 
-#### ACF Usage Example
-
-```php
-// Example of using ACF fields in template/frontpage/hero.php
-// ACF DATA for this section.
- $home_hero_title = get_field( 'hero_title' );
- $home_hero_description = get_field( 'hero_description' );
-
-?>
-
-<section class="home-hero w-full px-[1rem] lg:px-[2.5rem] py-8.5 lg:pt-[65px] lg:pb-[75px] -mb-[40px]">
-    <div class="container flex items-stretch  justify-between flex-wrap gap-10 lg:flex-nowrap p-0">
-        <div class="left basis-[100%] lg:basis-[50%]">
-
-            <?php if( $home_hero_title ) : ?>
-                <h1 class="title text-[2.25rem] lg:text-[3.75rem] leading-tight mb-4" fetchpriority="high"><?php echo wp_kses_post( $home_hero_title ); ?></h1>
-            <?php endif; ?>
-            <?php if( $home_hero_description ) : ?>
-                <p class="description text-xl" fetchpriority="high"><?php echo wp_kses_post( $home_hero_description ); ?></p>
-            <?php endif; ?>
-
-        </div>
-    </div>
-</section>
-```
 
 ### WordPress Hooks
 
 The theme uses WordPress hooks for extensibility. Check files in `inc/filters/` and `inc/setup/` for examples of how to use action and filter hooks.
-
-### Adding Custom Templates
-
-Create custom page templates by adding files to the theme directory with the following header:
-
-```php
-<?php
-/**
- * Page Name: Front Page front-page.php or use home.php
- *
- * @package Your_Theme_Name
- */
-
-get_header();
-?>
-
-<!-- Hero section -->
-<?php get_template_part( 'templates/frontpage/hero' ); ?>
-
-<?php get_footer(); ?>
-```
-
-Name your page file like so: page-about.php (for your about page and the slug must be example.com/about).
 
 ## Best Practices To Follow
 
@@ -358,7 +331,7 @@ This project is licensed under the GPL v2 or later.
 
 ## Credits
 
-- Built by [Dapo Obembe/Alpha Web Consult]: https://www.dapoobembe.com
+- Built by [Dapo Obembe]: https://www.dapoobembe.com
 - TailwindCSS: https://tailwindcss.com
 - WordPress: https://wordpress.org
 - Advanced Custom Fields: https://www.advancedcustomfields.com

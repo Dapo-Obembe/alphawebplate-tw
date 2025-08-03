@@ -11,12 +11,10 @@
 if(!defined('ABSPATH')) exit;
 
 /**
- * The theme version.
+ * This function includes all the files inside the inc/.
  *
  * @since 1.0.0
  */
-define( 'AWC_VERSION', wp_get_theme()->get( 'Version' ) );
-
 function include_inc_files() {
 	$files = array(
 	

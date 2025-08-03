@@ -101,18 +101,3 @@ if ( ! function_exists( 'awc_tw_plate_setup' ) ) :
 
 endif;
 add_action( 'after_setup_theme', 'awc_tw_plate_setup' );
-
-// Enqueues editor-style.css in the editors.
-if ( ! function_exists( 'awc_tw_plate_editor_style' ) ) :
-	/**
-	 * Enqueues editor-style.css in the editors.
-	 *
-	 * @since 1.0
-	 *
-	 * @return void
-	 */
-	function awc_tw_plate_editor_style() {
-		add_editor_style( get_parent_theme_file_uri( 'assets/css/output.css' ) );
-	}
-endif;
-add_action( 'after_setup_theme', 'awc_tw_plate_editor_style' );

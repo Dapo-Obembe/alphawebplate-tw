@@ -15,11 +15,23 @@ if(!defined('ABSPATH')) exit;
 
 get_header();
 ?>
-    <!-- Hero section -->
-    <?php get_template_part( 'template-parts/frontpage/hero' ); ?>
+   
+   <main id="main" class="site-main mt-0 mb-0" role="main">
+		<div class="entry-content ">
 
-    <!-- Recent Posts -->
-    <?php get_template_part( 'template-parts/frontpage/recent-posts' ); ?>  
+		<?php
+		if ( have_posts() ) :
+			while ( have_posts() ) :
+				the_post();
+
+				the_content();
+
+			endwhile;
+		endif;
+		?>
+				
+		</div> <!-- .entry-content -->
+	</main>
 
 <?php
 get_footer();

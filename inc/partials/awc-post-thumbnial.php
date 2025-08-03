@@ -53,10 +53,10 @@ function awc_post_thumbnail(
         $width = $image_meta['width'] ?? 1200;
         $height = $image_meta['height'] ?? 800;
     } else {
-        $image_url = get_theme_file_uri('/src/images/thumbnail-placeholder.avif');
+        $image_url = get_theme_file_uri('/assets/images/thumbnail-placeholder.webp');
         $srcset = '';
         $sizes = '';
-        $alt = __('No image available', 'sum');
+        $alt = __('No image available', 'alphawebplate-tw');
         $width = 1200;
         $height = 800;
     }

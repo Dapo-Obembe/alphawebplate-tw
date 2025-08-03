@@ -60,55 +60,69 @@ add_action( 'acf/init', 'awc_block_registration' );
  * NOTE: Register the script and Style here and use them in the
  * block.json of the each block. Check the example block.
  */
-function register_script_for_block(){
-    
-    // Register Swiper assets once, so any block can declare them as a dependency.
-    wp_register_style( 'swiper-style', get_stylesheet_directory_uri() . '/assets/swiperjs/swiper-bundle.min.css', array(), null );
-    wp_register_script( 'swiper-script', get_stylesheet_directory_uri() . '/assets/swiperjs/swiper-bundle.min.js', array(), null, true );
+function register_script_for_block() {
 
-    // Check if we are local environment.
-    $is_local = wp_get_environment_type() === 'local';
+	// Register Swiper assets once, so any block can declare them as a dependency.
+	wp_register_style( 'swiper-style', get_stylesheet_directory_uri() . '/assets/swiperjs/swiper-bundle.min.css', array(), null ); // phpcs:ignore
+	wp_register_script( 'swiper-script', get_stylesheet_directory_uri() . '/assets/swiperjs/swiper-bundle.min.js', array(), null, true ); // phpcs:ignore
 
-    // Register Tailwind based on the environment.
-    $path = $is_local ? get_stylesheet_directory() . '/assets/css/output.css' : get_stylesheet_directory() . 'dist/css/tailwind.css';
-    $uri = $is_local ? get_stylesheet_directory_uri() . '/assets/css/output.css' : get_stylesheet_directory_uri() . 'dist/css/tailwind.css';
+	$is_local = wp_get_environment_type() === 'local';
 
-    if ( file_exists( $path ) ) {
-        wp_register_style(
-            'awc-tailwind-style',
-            $uri,
-            array(),
-            filemtime( $path ),
-            'all'
-        );
+	if ( ! $is_local ) {
+		// Production: Load hashed CSS from Vite manifest.
+		$manifest_path = get_stylesheet_directory() . '/dist/manifest.json';
 
-    } 
-     
-    $blocks_dir = get_stylesheet_directory() . '/acf-blocks/';
-    $blocks_uri = get_stylesheet_directory_uri() . '/acf-blocks/';
+		if ( file_exists( $manifest_path ) ) {
+			$manifest = json_decode( wp_remote_get( $manifest_path ), true );
 
-    // Find all subdirectories inside awc-blocks/
-    $block_folders = glob($blocks_dir . '*', GLOB_ONLYDIR);
+			// Find first CSS file in manifest (adjust this if you use a specific entry point).
+			$css_file = null;
+			foreach ( $manifest as $entry ) {
+				if ( isset( $entry['file'] ) && str_ends_with( $entry['file'], '.css' ) ) {
+					$css_file = $entry['file'];
+					break;
+				}
+			}
 
-    foreach( $block_folders as $block_path ) {
-        $block_name = basename($block_path);
+			if ( $css_file ) {
+				$path = get_stylesheet_directory() . '/dist/' . $css_file;
+				$uri  = get_stylesheet_directory_uri() . '/dist/' . $css_file;
 
-        $script_path = $blocks_dir . "{$block_name}/script.js";
-        $script_uri  = $blocks_uri . "{$block_name}/script.js";
+				wp_register_style(
+					'awc-tailwind-style',
+					$uri,
+					array(),
+					filemtime( $path ),
+					'all'
+				);
+			}
+		}
+	}
 
-        if( file_exists( $script_path ) ) {
-            $script_handle = $block_name . '-script';
-            
-            wp_register_script(
-                $script_handle, 
-                $script_uri, 
-                array('swiper-script'),  
-                filemtime( $script_path), 
-                true 
-            );
-        }
-    }
-	
+	$blocks_dir = get_stylesheet_directory() . '/acf-blocks/';
+	$blocks_uri = get_stylesheet_directory_uri() . '/acf-blocks/';
+
+	// Find all subdirectories inside awc-blocks/.
+	$block_folders = glob( $blocks_dir . '*', GLOB_ONLYDIR );
+
+	foreach ( $block_folders as $block_path ) {
+		$block_name = basename( $block_path );
+
+		$script_path = $blocks_dir . "{$block_name}/script.js";
+		$script_uri  = $blocks_uri . "{$block_name}/script.js";
+
+		if ( file_exists( $script_path ) ) {
+			$script_handle = $block_name . '-script';
+
+			wp_register_script(
+				$script_handle,
+				$script_uri,
+				array( 'swiper-script' ),
+				filemtime( $script_path ),
+				true
+			);
+		}
+	}
 }
-add_action( 'wp_enqueue_scripts', 'register_script_for_block');
-add_action( 'admin_enqueue_scripts', 'register_script_for_block');
+add_action( 'wp_enqueue_scripts', 'register_script_for_block' );
+add_action( 'admin_enqueue_scripts', 'register_script_for_block' );

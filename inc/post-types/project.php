@@ -1,36 +1,37 @@
 <?php
 /**
- * Register work CPT.
+ * Register project CPT.
  * 
  * @package AlphaWebConsult
  * @since 1.0.0
  */
+
 if(!defined('ABSPATH')) exit;
 
 /**
- * This function registers the Custom Work Post type.
+ * This function registers the Custom Project Post type.
  */
-function works_post_types() {
+function projects_post_types() {
 	register_post_type(
-		'work',
+		'project',
 		array(
 			'supports'     => array( 'title', 'editor', 'thumbnail' ),
 			'public'       => true,
 			'show_in_rest' => true,
 			'menu_icon'    => 'dashicons-businessman',
 			'has_archive'  => true,
-			'rewrite'      => array( 'slug' => 'work', 'with_front' => false ),
+			'rewrite'      => array( 'slug' => 'project', 'with_front' => false ),
 			'has_category' => true,
 			'taxonomies'   => array( 'post_tag' ),
 			'labels'       => array(
-				'name'          => 'Works',
-				'add_new_item'  => 'Add New Work',
-				'edit_item'     => 'Edit Work',
-				'all_items'     => 'All Works',
-				'singular_name' => 'Work',
+				'name'          => 'Projects',
+				'add_new_item'  => 'Add New Project',
+				'edit_item'     => 'Edit Project',
+				'all_items'     => 'All Projects',
+				'singular_name' => 'Project',
 			),
 
 		)
 	);
 }
-add_action( 'init', 'works_post_types' );
+add_action( 'init', 'projects_post_types' );

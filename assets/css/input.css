@@ -1,38 +1,6 @@
-@import "tailwindcss";
-@import "./utilities.css";
-@import "./header.css";
-@import "./blocks/index.css";
-@import "./components/index.css";
-
-@theme {
-  --color-primary: #1e3a8a;
-  --color-secondary: #f97316;
-  --color-accent: #10b981;
-
-  --color-primary-dark: #eff6ff;
-  --color-secondary-dark: #fff7ed;
-  --color-accent-dark: #ecfdf5;
-
-  --color-text: #334155;
-  --color-border: #e5e7eb;
-  --color-body-bg: #f9fafb;
-
-  --color-whatsapp: #25d366;
-  --color-twitter: #1da1f2;
-  --color-linkedin: #0077b5;
-  --color-facebook: #3b5998;
-}
-
-html {
-  @apply transition-all duration-300 ease-in;
-  &.dark {
-    --background: #0c0c0c;
-    --foreground: #ededed;
-    --color-text: #f1f5f9;
-    --color-border: #1f2937;
-    --color-body-bg: #0f172a;
-  }
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer utilities {
   @keyframes marquee-scroll {
@@ -115,30 +83,11 @@ html {
 
 body {
   background: var(--background);
-  /*color: var(--foreground); */
-  font-family: "Inter", sans-serif;
+  font-family: "Space Grotesk";
 
   &.menu-open {
     @apply overflow-hidden;
   }
-}
-@theme {
-  --color-primary: #1e3a8a;
-  --color-secondary: #f97316;
-  --color-accent: #10b981;
-
-  --color-primary-dark: #eff6ff;
-  --color-secondary-dark: #fff7ed;
-  --color-accent-dark: #ecfdf5;
-
-  --color-text: #334155;
-  --color-border: #e5e7eb;
-  --color-body-bg: #f9fafb;
-
-  --color-whatsapp: #25d366;
-  --color-twitter: #1da1f2;
-  --color-linkedin: #0077b5;
-  --color-facebook: #3b5998;
 }
 
 html {
@@ -152,27 +101,25 @@ html {
   }
 }
 
-body {
-  background: var(--background);
-  /*color: var(--foreground); */
-  font-family: "Inter", sans-serif;
-
-  &.menu-open {
-    @apply overflow-hidden;
-  }
-}
-
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-weight: 500;
+  font-style: Medium;
+  line-height: 100%;
+  letter-spacing: 0%;
   @apply leading-tight;
 }
 
-.site-section {
-  @apply w-full min-h-[600px] px-[1rem] lg:px-[2.5rem] py-8.5 lg:py-[70px];
+h1 {
+  font-size: clamp(2.6875rem, 2.3134rem + 1.5962vw, 3.75rem);
+}
+
+h2 {
+  font-size: clamp(2.25rem, 2.162rem + 0.3756vw, 2.5rem);
 }
 
 .container {

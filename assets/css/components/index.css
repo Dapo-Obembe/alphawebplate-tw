@@ -1,1 +1,3 @@
-@import "../components/buttons.css";
+@import "./buttons.css";
+@import "./animation.css";
+@import "./header.css";

@@ -1,7 +1,0 @@
-@font-face {
-  font-family: "Inter";
-  src: url("Inter-VariableFont_slnt,wght.woff2") format("woff2-variations");
-  font-weight: 100 900; /* Range of weights supported by the font */
-  font-style: oblique 0deg 10deg; /* Range of slant (italic) supported by the font */
-  font-display: swap;
-}
