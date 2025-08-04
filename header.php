@@ -26,7 +26,6 @@
 	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="<?php echo get_template_directory_uri(); ?>/src/fonts/inter/Inter-VariableFont_slnt,wght.woff2" as="font" type="font/woff2" crossorigin>
 
 	<?php wp_head(); ?>
     
