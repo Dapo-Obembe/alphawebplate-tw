@@ -11,8 +11,6 @@
 
  // ACF DATA.
  $contact_us_btn = get_field( 'contact_us_btn', 'option' );
- $home_hero_image = get_field( 'hero_image' );
- $home_hero_box_image = get_field( 'hero_box_image' );
 
  ?>
 <!DOCTYPE html>
@@ -62,7 +60,7 @@
                 <div class="header-cta ml-[2rem]">
 
                     <?php
-                    if ( $contact_us_btn ) :
+                    if ( ! empty ( $contact_us_btn ) ) :
                     	$link_url    = $contact_us_btn['url'];
                     	$link_title  = $contact_us_btn['title'];
                     	$link_target = $contact_us_btn['target'] ? $contact_us_btn['target'] : '_self';

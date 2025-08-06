@@ -13,10 +13,6 @@
 $author_avatar = get_avatar( get_the_author_meta( 'ID' ), 60 );
 $author_name  = get_the_author_meta( 'first_name', get_post_field( 'post_author', get_the_ID() ) );
 
-// Post thumbnail.
-$thumbnail_url = get_the_post_thumbnail_url();
-$fallback_url = 'https://www.alphawebtips.com/wp-content/uploads/2025/02/no-thumbnail.webp';
-
 get_header();
 ?>
 
