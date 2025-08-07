@@ -14,8 +14,8 @@ if(!defined('ABSPATH')) exit;
 <button class="menu-toggle lg:hidden" aria-expanded="false" aria-label="<?php esc_attr_e( 'Menu', 'alphawebplate-tw' ); ?>">
 	<?php
 	the_svg(
+		'menu',
 		array(
-			'icon'   => 'menu',
 			'class'  => 'menu-toggle__icon menu-toggle__icon--open',
 			'height' => 32,
 			'width'  => 32,
@@ -24,8 +24,8 @@ if(!defined('ABSPATH')) exit;
 	?>
 	<?php
 	the_svg(
+		'close',
 		array(
-			'icon'   => 'close',
 			'class'  => 'menu-toggle__icon menu-toggle__icon--close',
 			'height' => 32,
 			'width'  => 32,

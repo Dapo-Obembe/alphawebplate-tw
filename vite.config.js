@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import path from "path";
 import { globSync } from "glob";
-import viteSvgSprite from "vite-plugin-svg-sprite";
 
 // Get all JS entry points from the pages directory, plus the main entry
 const entries = globSync("./assets/js/pages/*.js").reduce(
@@ -21,15 +20,7 @@ export default defineConfig(({ command }) => {
     base: isDevelopment ? "/" : "/dist/",
 
     // Define plugins
-    plugins: [
-      // Plugin for creating SVG sprites, similar to svg-sprite-loader
-      viteSvgSprite({
-        // The directory where your icons are located
-        include: "**/assets/icons/**/*.svg",
-        // Options for the sprite generation
-        symbolId: "icon-[name]",
-      }),
-    ],
+    plugins: [],
 
     // Configuration for the build process
     build: {
@@ -47,10 +38,6 @@ export default defineConfig(({ command }) => {
           entryFileNames: "js/[name].js",
           chunkFileNames: "js/[name].js",
           assetFileNames: (assetInfo) => {
-            // Place SVGs from the sprite into an 'icons' folder
-            if (assetInfo.name === "sprite.svg") {
-              return "icons/sprite.svg";
-            }
             // Place CSS into a 'css' folder
             if (assetInfo.name.endsWith(".css")) {
               return "css/[name]-[hash].css";
@@ -64,8 +51,8 @@ export default defineConfig(({ command }) => {
 
     // Configuration for the development server
     server: {
-      // The port for the dev server. You can change if you like.
-      port: 9000,
+      // The port for the dev server
+      port: 3000,
       // Enable strict port checking
       strictPort: true,
       // Enable Hot Module Replacement (HMR)
@@ -73,7 +60,7 @@ export default defineConfig(({ command }) => {
         host: "localhost",
       },
       cors: {
-        origin: "http://wp-wt-festus.local", // CHange to your local server url.
+        origin: "http://example.local", // Change to your local server URL.
         credentials: true,
       },
       // Proxy requests to your local WordPress server
@@ -81,14 +68,14 @@ export default defineConfig(({ command }) => {
         // Proxy all requests except for static assets from the dev server
         "^(?!/assets/|/dist/|/@vite/|/node_modules/|/main.js|/pages/.*.js|/assets/.*.svg).*$":
           {
-            target: "http://wp-wt-festus.local/", // Change to your local server URL
+            target: "http://example.local/", // Change to your local server URL
             changeOrigin: true,
             // Intercept and rewrite redirect headers
             configure: (proxy, options) => {
               proxy.on("proxyRes", (proxyRes, req, res) => {
                 if (proxyRes.headers.location) {
                   const newLocation = proxyRes.headers.location.replace(
-                    "http://wp-wt-festus.local/",
+                    "http://example.local/",
                     `http://${req.headers.host}/`
                   );
                   proxyRes.headers.location = newLocation;

@@ -20,12 +20,12 @@ $social_icons = get_field( 'site_social_icons', 'option' );
 
 			<a class="social-icons__item"
 				href="<?php echo esc_url( $item['url'] ); ?>"
-				aria-label="<?php echo esc_attr( ucfirst( $item['network'] ) . ' ' . __( 'Link', 'inc-hub-studio' ) ); ?>"
+				aria-label="<?php echo esc_attr( ucfirst( $item['network'] ) . ' ' . __( 'Link', 'alphawebplate-tw' ) ); ?>"
 				target="_blank" rel="noopener">
 				<?php
 				the_svg(
+					$item['network'],
 					array(
-						'icon'        => $item['network'],
 						'aria_hidden' => false,
 						'height'      => 20,
 						'width'       => 20,

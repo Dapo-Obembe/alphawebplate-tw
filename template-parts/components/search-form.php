@@ -18,8 +18,8 @@ if(!defined('ABSPATH')) exit;
 	<button type="submit" class="search-form__button">
 		<?php
 		the_svg(
+			'search',
 			array(
-				'icon'   => 'search',
 				'height' => 20,
 				'width'  => 20,
 			)

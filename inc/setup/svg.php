@@ -4,95 +4,84 @@
  *
  * @package  AlphaWebConsult
  */
-if(!defined('ABSPATH')) exit;
 
-/**
- * Includes the SVG sprite in the footer of the HTML document.
- *
- * This function uses the `wp_footer` action hook to include
- * the SVG sprite at the end of the document, before the
- * closing </body> tag. The sprite is included on every
- * page of the site.
- */
-function include_svg_sprite() {
-	echo '<div class="svg-sprite" style="display: none;">';
-	include_once get_template_directory() . '/dist/icons/sprite.svg';
-	echo '</div>';
-}
-add_action( 'wp_footer', 'include_svg_sprite' );
-add_action( 'admin_footer', 'include_svg_sprite' );
-
-/**
- * Helper function to generate SVG attributes.
- *
- * @param string $attr_name  Attribute name.
- * @param string $attr_value Attribute value.
- *
- * @return string SVG attribute markup.
- */
-function get_svg_attr( $attr_name, $attr_value ) {
-	if ( '' === $attr_value ) {
-		return '';
-	}
-
-	return sprintf( ' %s="%s"', $attr_name, esc_attr( $attr_value ) );
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**
- * Function to get the SVG markup.
+ * Returns inline SVG markup from raw SVG file.
  *
- * @param array $args {
- *     An array of SVG attributes. Optional.
+ * This function loads an SVG file from the theme's icons directory and allows you to inject
+ * common attributes like class, width, height, role, and title into the <svg> element.
  *
- *     @type string $icon   Icon name. Default ''.
- *     @type int    $width  Width of the SVG. Default 24.
- *     @type int    $height Height of the SVG. Default 24.
- *     @type string $class  CSS class for the SVG. Default ''.
- *     @type string $role   Role attribute. Default 'img'.
- *     @type bool   $aria_hidden aria-hidden attribute. Default true.
- *     @type string $title  Title for the SVG. Default ''.
+ * @param string $icon_name The name of the icon (without .svg extension).
+ * @param array  $args {
+ *     Optional. Additional attributes to add to the <svg> element.
+ *
+ *     @type string $class  CSS class(es) to apply to the SVG.
+ *     @type string $title  Text content for a <title> tag, for accessibility.
+ *     @type int    $width  Width of the SVG.
+ *     @type int    $height Height of the SVG.
+ *     @type string $role   ARIA role, defaults to 'img'.
  * }
  *
- * @return string The SVG markup.
+ * @return string The SVG markup string, or HTML comment if the icon is missing or invalid.
  */
-function get_svg( $args = array() ) {
-	// Set default values.
+function the_svg( $icon_name, $args = array() ) {
 	$defaults = array(
-		'icon'        => '',
-		'width'       => 24,
-		'height'      => 24,
-		'class'       => '',
-		'role'        => 'img',
-		'aria_hidden' => true,
-		'title'       => $args['icon'],
+		'class'  => '',
+		'title'  => '',
+		'width'  => '',
+		'height' => '',
+		'role'   => 'img',
 	);
 
-	// Merge the input arguments with the defaults.
 	$args = wp_parse_args( $args, $defaults );
 
-	// Start SVG markup.
-	$svg_markup  = '<svg';
-	$svg_markup .= get_svg_attr( 'class', $args['class'] );
-	$svg_markup .= get_svg_attr( 'role', $args['role'] );
-	$svg_markup .= get_svg_attr( 'aria-hidden', $args['aria_hidden'] ? 'true' : 'false' );
-	$svg_markup .= get_svg_attr( 'width', $args['width'] );
-	$svg_markup .= get_svg_attr( 'height', $args['height'] );
-	$svg_markup .= '>';
+	$path = get_template_directory() . "/assets/icons/{$icon_name}.svg";
 
-	if ( ! empty( $args['title'] ) ) {
-		$svg_markup .= '<title>' . esc_html( $args['title'] ) . '</title>';
+	if ( ! file_exists( $path ) ) {
+		return "<!-- Icon '{$icon_name}' not found -->";
 	}
 
-	$svg_markup .= '<use xlink:href="#' . esc_attr( $args['icon'] ) . '"></use></svg>';
+	$svg = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
-	return $svg_markup;
-}
+	if ( ! $svg ) {
+		return "<!-- Icon '{$icon_name}' could not be loaded -->";
+	}
 
-/**
- * Function to output the SVG markup.
- *
- * @param array $args The SVG attributes.
- */
-function the_svg( $args = array() ) {
-	echo get_svg( $args ); // phpcs:ignore
+	// Load SVG into DOMDocument to safely manipulate it.
+	$dom = new DOMDocument();
+	libxml_use_internal_errors( true ); // Suppress warnings from invalid SVGs.
+	$dom->loadXML( $svg );
+	libxml_clear_errors();
+
+	$svg_element = $dom->getElementsByTagName( 'svg' )->item( 0 );
+
+	if ( ! $svg_element ) {
+		return "<!-- Icon '{$icon_name}' is not valid SVG -->";
+	}
+
+	// Set attributes if provided.
+	if ( $args['class'] ) {
+		$svg_element->setAttribute( 'class', esc_attr( $args['class'] ) );
+	}
+	if ( $args['width'] ) {
+		$svg_element->setAttribute( 'width', esc_attr( $args['width'] ) );
+	}
+	if ( $args['height'] ) {
+		$svg_element->setAttribute( 'height', esc_attr( $args['height'] ) );
+	}
+	if ( $args['role'] ) {
+		$svg_element->setAttribute( 'role', esc_attr( $args['role'] ) );
+	}
+
+	// Add <title> if provided.
+	if ( $args['title'] ) {
+		$title = $dom->createElement( 'title', esc_html( $args['title'] ) );
+		$svg_element->insertBefore( $title, $svg_element->firstChild );
+	}
+
+	return $dom->saveXML( $svg_element );
 }
